@@ -1,0 +1,17 @@
+---
+- name: Packages Provisioner
+  role: ami-wp
+  become: yes
+
+  tasks: Update Packages
+  apt:
+    update_cache: yes
+
+- name: Installing Apache
+  apt:
+    update_cache: yes
+    name:
+      - apache2
+      - php
+      - libapache2-mod-php
+      - php-curl
