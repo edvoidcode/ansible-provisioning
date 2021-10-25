@@ -9,9 +9,3 @@
 
 - name: Installing Apache
   apt:
-    update_cache: yes
-    name:
-      - apache2
-      - php
-      - libapache2-mod-php
-      - php-curl
