@@ -1,0 +1,32 @@
+stages: 
+   - test
+   - build
+
+.terraform:
+   .image:
+      name: hashicorp/terraform:latest
+      entrypoint:
+         - '/usr/bin/env'
+         - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+   tags: 
+      - aws
+      - badecos
+   before_script:
+    - terraform init
+
+validate-terraform:
+   stage: test
+   extends: .terraform
+   script: 
+      - terraform validate
+
+plan-terraform: 
+   stage: test
+   extends: .terraform
+   script:
+      - terraform plan
+destroy-apply:
+   stage: build
+   extends: .terraform
+   script: 
+      - terraform destroy --auto-aprove
