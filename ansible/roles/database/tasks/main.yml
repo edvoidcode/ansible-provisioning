@@ -1,11 +1,12 @@
 ---
-- name: Packages Provisioner
-  role: ami-wp
-  become: yes
-
-  tasks: Update Packages
+- name: Update Packages
   apt:
     update_cache: yes
 
-- name: Installing Apache
+- name: Installing MySQL
   apt:
+   name:
+      - mysql-server
+      - python3-pymysql
+      - php-mysql 
+   

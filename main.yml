@@ -1,4 +1,5 @@
-- hosts: wordpress
+- hosts: localhost
   become: yes
   roles:
     - webservers
+    - database
