@@ -1,5 +1,5 @@
-resource "aws_security_group" "sg-rules-wp" {
-  name        = "sg-rules-wp"
+resource "aws_security_group" "sgrules_wp" {
+  name        = "sgrules_wp"
   description = "Allow traffic ssh and http"
   vpc_id      = aws_vpc.lab-vpc.id
 
@@ -26,13 +26,13 @@ resource "aws_security_group" "sg-rules-wp" {
       cidr_blocks      = ["0.0.0.0/0"]
    }
 
-  tags {
-    Name = "sg-rules-wp"
+  tags = {
+    Name = "sgrules_wp"
   }
 }
 
-resource "aws_security_group" "sg-rules-sql" {
-  name        = "sg-rules-sql"
+resource "aws_security_group" "sgrules_sql" {
+  name        = "sgrules_sql"
   description = "Allow traffic ssh and SQL"
   vpc_id      = aws_vpc.lab-vpc.id
 
@@ -60,8 +60,8 @@ resource "aws_security_group" "sg-rules-sql" {
     }
   
 
-  tags{
-      Name = "sg-rules-sql"
+  tags = {
+      Name = "sgrules_sql"
   }
   
 }

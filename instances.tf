@@ -1,8 +1,8 @@
 resource "aws_instance" "node-wp" {
-   // ami =
+   ami                         = var.ami-id
    instance_type               = var.instance_type
    subnet_id                   = aws_subnet.sub-pub.id
-   vpc_security_group_ids      = [aws_security_group.sg-rules-wp.id]
+   vpc_security_group_ids      = [aws_security_group.sgrules_wp.id]
    associate_public_ip_address = true
    // user_data                   =
    // key_name                    =
@@ -10,7 +10,7 @@ resource "aws_instance" "node-wp" {
  
   
    
-   tags {
+   tags = {
      Name = "lab-wp"
    }
    
@@ -18,20 +18,19 @@ resource "aws_instance" "node-wp" {
 
 
 resource "aws_instance" "node-sql" {
-   // ami =
+   ami                         = var.ami-id
    instance_type               = var.instance_type
    subnet_id                   = aws_subnet.sub-pvt.id
-   vpc_security_group_ids      = [aws_security_group.sg-rules-sql.id]
+   vpc_security_group_ids      = [aws_security_group.sgrules_sql.id]
    associate_public_ip_address = true
    // user_data                   =
    // key_name                    =
-   // depends_on = [ 
    
    // provisioner "local-exec" {
    //    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u {var.user} -i '${self.ipv4_address},' 
    //    --private-key ${var.ssh_private_key} main.yml"}
    
-   tags {
+   tags = {
      Name = "lab-sql"
    }
 }
