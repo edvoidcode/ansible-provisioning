@@ -1,39 +1,37 @@
-
 resource "aws_instance" "node-wp" {
-   ami =
-   instance_type               = var.ami-id
+   // ami =
+   instance_type               = var.instance_type
    subnet_id                   = aws_subnet.sub-pub.id
    vpc_security_group_ids      = [aws_security_group.sg-rules-wp.id]
    associate_public_ip_address = true
-   user_data                   =
-   key_name                    =
-   // depends_on = [ 
+   // user_data                   =
+   // key_name                    =
+   depends_on = [aws_instance.node-sql]
+ 
+  
    
-   provisioner "local-exec" {
-      command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u {var.user} -i '${self.ipv4_address},' 
-      --private-key ${var.ssh_private_key} main.yml"}
-   tags = {
+   tags {
      Name = "lab-wp"
    }
    
 }
 
 
-resource "aws_instance" "node-wp" {
-   ami =
-   instance_type               = var.ami-id
+resource "aws_instance" "node-sql" {
+   // ami =
+   instance_type               = var.instance_type
    subnet_id                   = aws_subnet.sub-pvt.id
-   vpc_security_group_ids      = [aws_security_group.sg-rules-wp.id]
+   vpc_security_group_ids      = [aws_security_group.sg-rules-sql.id]
    associate_public_ip_address = true
-   user_data                   =
-   key_name                    =
+   // user_data                   =
+   // key_name                    =
    // depends_on = [ 
    
-   provisioner "local-exec" {
-      command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u {var.user} -i '${self.ipv4_address},' 
-      --private-key ${var.ssh_private_key} main.yml"}
-   tags = {
-     Name = "lab-wp"
-   }
+   // provisioner "local-exec" {
+   //    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u {var.user} -i '${self.ipv4_address},' 
+   //    --private-key ${var.ssh_private_key} main.yml"}
    
+   tags {
+     Name = "lab-sql"
+   }
 }

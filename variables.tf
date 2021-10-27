@@ -25,3 +25,9 @@ variable "ami-id" {
    default     = "ami-0a8e758f5e873d1c1"
    description = "AWS Image Ubuntu Server 20.04 LTS (HVM)"
 }
+
+variable "instance_type" {
+   type        = string
+   default     = "t2.micro"
+   description = "Instance type"
+}

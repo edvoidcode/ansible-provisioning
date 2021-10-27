@@ -11,14 +11,13 @@ provider "aws" {
    region = var.region
 }
 
-resource "aws_s3_bucket" "b" {
-  bucket = "my-tf-test-bucket"
-  acl    = "private"
-
-  tags = {
-    Name        = "lab-bucket"
-    Environment = "Dev"
+terraform {
+  backend "s3" {
+    bucket = "newbucket-tf"
+    key    = "test/tf2.state"
+    region = "eu-west-1"
   }
 }
+
 
 
