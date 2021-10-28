@@ -1,4 +1,3 @@
-handlers:
 - name: Reload Apache
   service:
     name: apache2

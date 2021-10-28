@@ -1,10 +1,4 @@
 ---
-- hosts: webservers
-  become: true
-  vars_files:
-    - vars/main.yml
-  tags: [system]
-
 - name: Install prerequisites
   apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
   tags: [ system ]
@@ -14,42 +8,42 @@
     update_cache: yes
     name:
       - apache2
-      - php
       - libapache2-mod-php
+      - php
+      - php-bcmath      
       - php-curl
+      - php-intl
+      - php-bcmath
+      - php-xml
+      - php-zip 
   tags: [system]
-
-- name: Install PHP Extensions
-  apt: name={{ item }} update_cache=yes state=latest
-  loop: "{{ php_modules }}"
-  tags: [ system ]
 
 
 #Apache Configuration 
 
 - name: Create document root
   file:
-    path: "/var/www/{{ http_host }}"
+    path: "/var/www/wordpress"
     state: directory
     owner: "www-data"
     group: "www-data"
     mode: '0755'
   tags: [ apache ]
 
-# - name: Set up Apache VirtualHost
-#   template:
-#     src: "files/apache.conf.j2"
-#     dest: "/etc/apache2/sites-available/{{ http_conf }}"
-#     owner: root
-#     group: root
-#     mode: u=rw,g=r,o=r
-#   notify: Reload Apache
-#   tags: [ apache ]
+- name: Set up Apache VirtualHost
+  template:
+    src: "templates/apache.conf.j2"
+    dest: "/etc/apache2/sites-available/wordpress"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  notify: Reload Apache
+  tags: [ apache ]
 
-# - name: Enable rewrite module
-#   shell: /usr/sbin/a2enmod rewrite
-#   notify: Reload Apache
-#   tags: [ apache ]
+- name: Enable rewrite module
+  shell: /usr/sbin/a2enmod rewrite
+  notify: Reload Apache
+  tags: [ apache ]
 
 - name: Enable new site
   shell: /usr/sbin/a2ensite {{ http_conf }}
@@ -60,12 +54,6 @@
   shell: /usr/sbin/a2dissite 000-default.conf
   notify: Restart Apache
   tags: [ apache ]
-
-- name: Start and Enable Apache
-  service: 
-   name: httpd
-   state: started
-   enabled: yes
 
   # UFW Configuration
 - name: "UFW - Allow HTTP on port {{ http_port }}"
@@ -79,7 +67,7 @@
 - name: Download and unpack latest WordPress
   unarchive:
     src: https://wordpress.org/latest.tar.gz
-    dest: "/var/www/wordpress"
+    dest: "/var/www/"
     remote_src: yes
     creates: "/var/www/wordpress"
   tags: [ wordpress ]
@@ -103,7 +91,6 @@
 
 - name: Set up wp-config
   template:
-    src: "files/wp-config2.php"
+    src: "templates/wp-config2.php.j2"
     dest: "/var/www/wordpress/wp-config.php"
   tags: [ wordpress ]
-
