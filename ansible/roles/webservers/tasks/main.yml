@@ -16,54 +16,22 @@
       - php-bcmath
       - php-xml
       - php-zip 
+      - php-gd
+      - php-mbstring
+      - php-xmlrpc
+      - php-soap
+      
   tags: [system]
-
 
 #Apache Configuration 
 
-- name: Create document root
-  file:
-    path: "/var/www/wordpress"
-    state: directory
-    owner: "www-data"
-    group: "www-data"
-    mode: '0755'
-  tags: [ apache ]
-
-- name: Set up Apache VirtualHost
-  template:
-    src: "templates/apache.conf.j2"
-    dest: "/etc/apache2/sites-available/wordpress"
-    owner: root
-    group: root
-    mode: u=rw,g=r,o=r
-  notify: Reload Apache
-  tags: [ apache ]
-
-- name: Enable rewrite module
-  shell: /usr/sbin/a2enmod rewrite
-  notify: Reload Apache
-  tags: [ apache ]
-
-- name: Enable new site
-  shell: /usr/sbin/a2ensite {{ http_conf }}
-  notify: Reload Apache
-  tags: [ apache ]
-
-- name: Disable default Apache site
-  shell: /usr/sbin/a2dissite 000-default.conf
-  notify: Restart Apache
-  tags: [ apache ]
-
-  # UFW Configuration
-- name: "UFW - Allow HTTP on port {{ http_port }}"
+- name: "UFW - Allow HTTP port {{ http_port }}"
   ufw:
     rule: allow
     port: "{{ http_port }}"
     proto: tcp
   tags: [ system ]
 
- # WordPress Configuration
 - name: Download and unpack latest WordPress
   unarchive:
     src: https://wordpress.org/latest.tar.gz
@@ -72,7 +40,16 @@
     creates: "/var/www/wordpress"
   tags: [ wordpress ]
 
-- name: Set ownership
+- name: Create document root
+  file:
+    path: "/var/www/wordpress"
+    state: directory
+    owner: "root"
+    group: "www-data"
+    mode: '0755'
+  tags: [ apache ]
+
+- name: Set ownership to Apache
   file:
     path: "/var/www/wordpress"
     state: directory
@@ -80,6 +57,37 @@
     owner: www-data
     group: www-data
   tags: [ wordpress ]
+
+- name: Set up Apache VirtualHost
+  template:
+    src: "templates/apache.conf"
+    dest: "/etc/apache2/sites-available/wordpress.conf"
+    owner: www-data
+    group: www-data
+    mode: u=rw,g=r,o=r
+  notify: Reload Apache
+  tags: [ apache ]
+
+# - name: Enable rewrite module
+#   shell: /usr/sbin/a2enmod rewrite
+#   notify: Reload Apache
+#   tags: [ apache ]
+
+- name: enabled mod_rewrite
+  apache2_module: 
+   name: rewrite 
+   state: present
+   notify: Restart Apache
+
+- name: Enable new site
+  shell: /usr/sbin/a2ensite wordpress.conf
+  notify: Reload Apache
+  tags: [ apache ]
+
+- name: Disable default Apache site
+  shell: /usr/sbin/a2dissite 000-default.conf
+  notify: Restart Apache
+  tags: [ apache ]
 
 - name: Set permissions for directories
   shell: "/usr/bin/find /var/www/wordpress/ -type d -exec chmod 750 {} \\;"
@@ -91,6 +99,10 @@
 
 - name: Set up wp-config
   template:
-    src: "templates/wp-config2.php.j2"
+    src: "templates/wp-config.php"
     dest: "/var/www/wordpress/wp-config.php"
   tags: [ wordpress ]
+
+
+
+

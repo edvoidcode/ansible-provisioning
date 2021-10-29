@@ -1,11 +1,17 @@
-<VirtualHost *:80>
-ServerAdmin root@localhost
-DocumentRoot /var/www/html/wordpress
-<Directory "/var/www/html/wordpress">
-Options Indexes FollowSymLinks
-AllowOverride all
-Require all granted
+<VirtualHost *:{{ http_port }}>
+   ServerAdmin root@localhost
+   ServerName {{ http_host }}
+   ServerAlias www.{{ http_host }}
+   DocumentRoot /var/www/wordpress
+   ErrorLog ${APACHE_LOG_DIR}/error.log
+   CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+<Directory "/var/www/wordpress">
+      Options Indexes FollowSymLinks
+      AllowOverride all
+      Require all granted
 </Directory>
-ErrorLog /var/log/httpd/wordpress_error.log
-CustomLog /var/log/httpd/wordpress_access.log common
-</VirtualHost>
+
+   <IfModule mod_dir.c>
+       DirectoryIndex index.php index.html index.cgi index.pl  index.xhtml index.htm
+   </IfModule>

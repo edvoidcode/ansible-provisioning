@@ -20,13 +20,13 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', '{{ wordpress }}' );
+define( 'DB_NAME', '{{ db_name }}' );
 
 /** MySQL database username */
-define( 'DB_USER', '{{ wpuser }}' );
+define( 'DB_USER', '{{ db_user }}' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', '{{ mysql_password }}' );
+define( 'DB_PASSWORD', '{{ db_password}}' );
 
 /** MySQL hostname */
 define( 'DB_HOST', '${dbhost}' );

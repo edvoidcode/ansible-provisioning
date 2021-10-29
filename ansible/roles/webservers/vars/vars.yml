@@ -1,7 +1,12 @@
 ---
-mysql_root_password: "mysql_root_password"
-app_user: "edvops"
-# http_host: "wordpress"
-http_conf: "your_domain.conf"
+
+#HTTP Settings
+http_host: "localhost"
+http_conf: "wordpress.conf"
 http_port: "80"
-disable_default: true
+
+db_name: "wordpress"
+db_user: "wpuser"
+db_password: "password"
+mysql_password: "password"
+# disable_default: true
